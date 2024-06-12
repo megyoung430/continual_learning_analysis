@@ -127,30 +127,6 @@ def getSessIdsAcrossMultipleAnimals(dbe, task_name, subjids, sessiondate=None, s
         all_sess_ids = all_sess_ids + just_sess_ids.tolist()
     return all_sess_ids
 
-def getEnvironmentDictionary(dbe, task_name, subjid=None, sessiondate=None):
-
-    all_sess_ids = getSessIdsAcrossMultipleDates(dbe, task_name, subjid, sessiondate)
-
-    sess_ids_by_env = {}
-    sessiondate_by_env = {}
-    
-    counter = 0
-    for sess_id in all_sess_ids:
-        query = 'select * from beh.trialsview where sessid = ' + str(sess_id)
-        df = pd.read_sql(query, dbe)
-        env_type = df['data'][0]['environment_type']
-
-        if env_type in sess_ids_by_env:
-            sess_ids_by_env[env_type].append(sess_id)
-            sessiondate_by_env[env_type].append(sessiondate[counter])
-        else:
-            sess_ids_by_env[env_type] = [sess_id]
-            sessiondate_by_env[env_type] = sessiondate[counter]
-        
-        counter = counter + 1
-    
-    return sess_ids_by_env, sessiondate_by_env
-
 def getSessionDF(dbe, sess_id):
 
     """
