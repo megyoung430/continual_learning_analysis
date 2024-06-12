@@ -6,6 +6,7 @@
 
 In order to access the database, you need to create a '.dbconf' file in your home directory. To read from the database, you'll need the client section; to manage and update the settings for the animals, you'll need the manage section.
 
+```
 [client]
 host=rodb.deneuro.org
 user=mime
@@ -16,6 +17,7 @@ port=3306
 user=derig
 passwd=
 host=db.deneuro.org
+```
 
 ### Session and trial information in the database
 
