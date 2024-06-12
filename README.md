@@ -2,6 +2,23 @@
 
 ## Accessing the Database
 
+### Setting up
+
+In order to access the database, you need to create a '.dbconf' file in your home directory. To read from the database, you'll need the client section; to manage and update the settings for the animals, you'll need the manage section.
+
+[client]
+host=rodb.deneuro.org
+user=mime
+passwd=
+port=3306
+
+[manage]
+user=derig
+passwd=
+host=db.deneuro.org
+
+### Session and trial information in the database
+
 The functions `getSessionParsedEvents`, `getSessionData`, and `getSessionSettings` will retrieve (and decode from JSON) different pieces of session information from the database.
 
 What is the difference?
