@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import json
 
-def getDatesasStrings(dates):
+def get_dates_as_strings(dates):
 
     """
     This function takes datetime objects for all your session dates and returns them as an array of strings.
@@ -20,15 +20,15 @@ def getDatesasStrings(dates):
         dates_as_strings.append(date.strftime('%D'))
     return np.array(dates_as_strings)
 
-def getSessionDates(dbe, task_name, startdate):
+def get_session_dates(dbe, task_name, startdate):
 
     query = 'select * from beh.sessview where protocol="' + task_name + '"'
     df = pd.read_sql(query, dbe)
-    sessiondates = getDatesasStrings(df.sessiondate)
+    sessiondates = get_dates_as_strings(df.sessiondate)
     startdate_ind = np.where(sessiondates == startdate)[0]
     return sessiondates[startdate_ind:]
 
-def getSessIds(dbe, task_name, subjid=None, sessiondate=None, settings_name=None, just_ids=True):
+def get_sess_ids(dbe, task_name, subjid=None, sessiondate=None, settings_name=None, just_ids=True):
 
     """
     This function will get the session IDs for particular sessions you want to analyze.
@@ -63,7 +63,7 @@ def getSessIds(dbe, task_name, subjid=None, sessiondate=None, settings_name=None
         sess_ids = sess_ids[sess_ids_inds]
     
     if sessiondate is not None:
-        sessiondates = getDatesasStrings(df.sessiondate)
+        sessiondates = get_dates_as_strings(df.sessiondate)
         sessiondate_inds = np.where(sessiondates == sessiondate)[0]
         sess_ids_inds = np.intersect1d(sess_ids_inds, sessiondate_inds)
         sess_ids = sess_ids[sess_ids_inds]
@@ -81,7 +81,7 @@ def getSessIds(dbe, task_name, subjid=None, sessiondate=None, settings_name=None
     else:
         return sess_ids, sess_ids_inds
 
-def getSessIdsAcrossMultipleDates(dbe, task_name, sessiondates, subjid=None, settings_name=None):
+def get_sess_ids_across_multiple_dates(dbe, task_name, sessiondates, subjid=None, settings_name=None):
 
     """
     This function will get the session IDs for particular sessions you want to analyze.
@@ -100,11 +100,11 @@ def getSessIdsAcrossMultipleDates(dbe, task_name, sessiondates, subjid=None, set
     
     all_sess_ids = []
     for session in sessiondates:
-        just_sess_ids = getSessIds(dbe, task_name, subjid=subjid, sessiondate=session, settings_name=settings_name, just_ids=True)
+        just_sess_ids = get_sess_ids(dbe, task_name, subjid=subjid, sessiondate=session, settings_name=settings_name, just_ids=True)
         all_sess_ids = all_sess_ids + just_sess_ids.tolist()
     return all_sess_ids
 
-def getSessIdsAcrossMultipleAnimals(dbe, task_name, subjids, sessiondate=None, settings_name=None):
+def get_sess_ids_across_multiple_animals(dbe, task_name, subjids, sessiondate=None, settings_name=None):
 
     """
     This function will get the session IDs for multiple animals for a specific session you want to analyze.
@@ -123,11 +123,11 @@ def getSessIdsAcrossMultipleAnimals(dbe, task_name, subjids, sessiondate=None, s
     
     all_sess_ids = []
     for subjid in subjids:
-        just_sess_ids = getSessIds(dbe, task_name, subjid=subjid, sessiondate=sessiondate, settings_name=settings_name, just_ids=True)
+        just_sess_ids = get_sess_ids(dbe, task_name, subjid=subjid, sessiondate=sessiondate, settings_name=settings_name, just_ids=True)
         all_sess_ids = all_sess_ids + just_sess_ids.tolist()
     return all_sess_ids
 
-def getSessionDF(dbe, sess_id):
+def get_session_df(dbe, sess_id):
 
     """
     This function will get the full pandas dataframe for a particular session.
@@ -144,7 +144,7 @@ def getSessionDF(dbe, sess_id):
     df = pd.read_sql(query, dbe)
     return df
 
-def getSessionParsedEvents(dbe, sess_id, all_trials=True, trial_nums=None):
+def get_session_parsed_events(dbe, sess_id, all_trials=True, trial_nums=None):
 
     """
     This function will get the parsed events, decoded from json, from a particular session. You can either get the parsed events from all trials
@@ -191,7 +191,7 @@ def getSessionParsedEvents(dbe, sess_id, all_trials=True, trial_nums=None):
                 parsed_events_subset.append(parsed_events = json.loads(utf_parsed_events)['vals'])
             return parsed_events_subset
 
-def getSessionData(dbe, sess_id, all_trials=True, trial_nums=None):
+def get_session_data(dbe, sess_id, all_trials=True, trial_nums=None):
 
     """
      This function will get the data, decoded from json, from a particular session. You can either get the data from all trials
@@ -236,7 +236,7 @@ def getSessionData(dbe, sess_id, all_trials=True, trial_nums=None):
                 data_subset.append(data)
             return data_subset
 
-def getSessionSettings(dbe, sess_id, all_trials=True, trial_nums=None):
+def get_session_settings(dbe, sess_id, all_trials=True, trial_nums=None):
 
     """
     This function will get the settings, decoded from json, from a particular session. You can either get the settings from all trials
@@ -281,7 +281,7 @@ def getSessionSettings(dbe, sess_id, all_trials=True, trial_nums=None):
                 settings_subset.append(settings)
             return settings_subset
 
-def getDefaultSettings(dbe, sess_id):
+def get_default_settings(dbe, sess_id):
 
-    default_settings = getSessionSettings(dbe, sess_id, all_trials=False, trial_nums=[0])
+    default_settings = get_session_settings(dbe, sess_id, all_trials=False, trial_nums=[0])
     return default_settings
