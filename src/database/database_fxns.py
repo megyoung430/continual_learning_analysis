@@ -1,17 +1,17 @@
+"""This file specifies all the functions needed to access data from the DE lab database for the continual learning experiments."""
+
 import numpy as np
 import pandas as pd
 import json
 
 def get_dates_as_strings(dates):
+    """This function takes datetime objects for all your session dates and returns them as an array of strings.
 
-    """
-    This function takes datetime objects for all your session dates and returns them as an array of strings.
-
-    Inputs:
+    Args:
         - dates (array of datetime objects): the dates as datetime objects for each session. This will be the automatic format of the 
         dataframe column with the header "sessiondate" (i.e., df.sessiondate).
     
-    Outputs:
+    Returns:
         - dates_as_strings (array): array of the dates as strings in the format 'M/D/Y' (e.g., '11/20/23' for 20th Nov 2023)
     """
 
@@ -29,12 +29,10 @@ def get_session_dates(dbe, task_name, startdate):
     return sessiondates[startdate_ind:]
 
 def get_sess_ids(dbe, task_name, subjid=None, sessiondate=None, settings_name=None, just_ids=True):
-
-    """
-    This function will get the session IDs for particular sessions you want to analyze.
+    """This function will get the session IDs for particular sessions you want to analyze.
     These sessions IDs can then be used to create specific queries to get the data for only specific sessions.
 
-    Inputs:
+    Args:
         - dbe (Engine object): database engine
         - task_name (string): name of a task (e.g., "prey_foraging_fm")
         - subjid (string): name of a subject of interest (e.g., "EXN-R-0013")
@@ -44,7 +42,7 @@ def get_sess_ids(dbe, task_name, subjid=None, sessiondate=None, settings_name=No
         If false, it will stay in the pandas dataframe format where you need to index it by its row in the dataframe. This means that the
         1st session may not have a 0th index but will retain the its original index from the dataframe.
     
-    Outputs:
+    Returns:
         - If just_ids is True:
             just_sess_ids (array): array of the session IDs associated with sessions that you want to analyze.
         - If just_ids is False:
@@ -82,19 +80,17 @@ def get_sess_ids(dbe, task_name, subjid=None, sessiondate=None, settings_name=No
         return sess_ids, sess_ids_inds
 
 def get_sess_ids_across_multiple_dates(dbe, task_name, sessiondates, subjid=None, settings_name=None):
-
-    """
-    This function will get the session IDs for particular sessions you want to analyze.
+    """This function will get the session IDs for particular sessions you want to analyze.
     These sessions IDs can then be used to create specific queries to get the data for only specific sessions.
 
-    Inputs:
+    Args:
         - dbe (Engine object): database engine
         - task_name (string): name of a task (e.g., "prey_foraging_fm")
         - subjid (string): name of a subject of interest (e.g., "EXN-R-0013")
         - sessiondate (list of chars): list of dates of sessions of interest. MUST BE in 'M/D/Y' format (e.g., '11/20/23' for 20th Nov 2023)
         - settings_name (string): name of your settings of interest, likely reflecting a training state of interest (e.g., "default")
     
-    Outputs:
+    Returns:
         - sess_ids: array of the session IDs associated with sessions that you want to analyze.
     """
     
@@ -105,19 +101,17 @@ def get_sess_ids_across_multiple_dates(dbe, task_name, sessiondates, subjid=None
     return all_sess_ids
 
 def get_sess_ids_across_multiple_animals(dbe, task_name, subjids, sessiondate=None, settings_name=None):
-
-    """
-    This function will get the session IDs for multiple animals for a specific session you want to analyze.
+    """This function will get the session IDs for multiple animals for a specific session you want to analyze.
     These sessions IDs can then be used to create specific queries to get the data for only specific animals.
 
-    Inputs:
+    Args:
         - dbe (Engine object): database engine
         - task_name (string): name of a task (e.g., "prey_foraging_fm")
         - subjids (list of strings): list of names of subjects of interest (e.g., "EXN-R-0013")
         - sessiondate (char): date of a session of interest. MUST BE in 'M/D/Y' format (e.g., '11/20/23' for 20th Nov 2023)
         - settings_name (string): name of your settings of interest, likely reflecting a training state of interest (e.g., "default")
     
-    Outputs:
+    Returns:
         - sess_ids: array of the session IDs associated with the animals that you want to analyze.
     """
     
@@ -128,15 +122,13 @@ def get_sess_ids_across_multiple_animals(dbe, task_name, subjids, sessiondate=No
     return all_sess_ids
 
 def get_session_df(dbe, sess_id):
-
-    """
-    This function will get the full pandas dataframe for a particular session.
+    """This function will get the full pandas dataframe for a particular session.
     
-    Inputs: 
+    Args: 
         - dbe (Engine object): database engine
         -sess_id (int): session ID of interest
     
-    Outputs:
+    Returns:
         - df (dataframe): pandas dataframe for the whole session
     """
 
@@ -145,19 +137,17 @@ def get_session_df(dbe, sess_id):
     return df
 
 def get_session_parsed_events(dbe, sess_id, all_trials=True, trial_nums=None):
-
-    """
-    This function will get the parsed events, decoded from json, from a particular session. You can either get the parsed events from all trials
+    """This function will get the parsed events, decoded from json, from a particular session. You can either get the parsed events from all trials
     or specify a specific subset of trials.
 
-    Inputs:
+    Args:
         - dbe (Engine object): database engine
         - sess_id (int): session ID of interest
         - all_trials (bool): If true, this function will get the parsed events for all the trials in the session. If false, you can get the parsed 
         events from only a subset of trials, specified in trial_num
         - trial_nums (list): list of the trials of interest, only used if all_trials is false
     
-    Outputs: 
+    Returns: 
         - If all_trials is True: 
             - parsed_events_all_trials (list): list of dictionaries for the parsed_events for all the trials in the session
         - If all_trials is False: 
@@ -192,19 +182,17 @@ def get_session_parsed_events(dbe, sess_id, all_trials=True, trial_nums=None):
             return parsed_events_subset
 
 def get_session_data(dbe, sess_id, all_trials=True, trial_nums=None):
-
-    """
-     This function will get the data, decoded from json, from a particular session. You can either get the data from all trials
+    """This function will get the data, decoded from json, from a particular session. You can either get the data from all trials
     or specify a specific subset of trials.
 
-    Inputs:
+    Args:
         - dbe (Engine object): database engine
         - sess_id (int): session ID of interest
         - all_trials (bool): If true, this function will get the data for all the trials in the session. If false, you can get the data from only
         a subset of trials, specified in trial_nums
         - trial_nums (list): list of the trials of interest, only used if all_trials is false
     
-    Outputs: 
+    Returns: 
         - If all_trials is True: 
             - data_events_all_trials (list): list of dictionaries for the data for all the trials in the session
         - If all_trials is False: 
@@ -237,19 +225,17 @@ def get_session_data(dbe, sess_id, all_trials=True, trial_nums=None):
             return data_subset
 
 def get_session_settings(dbe, sess_id, all_trials=True, trial_nums=None):
-
-    """
-    This function will get the settings, decoded from json, from a particular session. You can either get the settings from all trials
+    """This function will get the settings, decoded from json, from a particular session. You can either get the settings from all trials
     or specify a specific subset of trials.
 
-    Inputs:
+    Args:
         - dbe (Engine object): database engine
         - sess_id (int): session ID of interest
         - all_trials (bool): If true, this function will get the data for all the trials in the session. If false, you can get the settings from only
         a subset of trials, specified in trial_nums
         - trial_nums (list): list of the trials of interest, only used if all_trials is false
     
-    Outputs: 
+    Returns: 
         - If all_trials is True: 
             - settings_all_trials (list): list of dictionaries for the settings for all the trials in the session
         - If all_trials is False: 
